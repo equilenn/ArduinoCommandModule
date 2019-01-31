@@ -1,8 +1,9 @@
 #pragma once
 
-#include "SerialCommunication.h"
+#include "Communication.h"
+#include "Commands/AbstractCommand.h"
 
-typedef void (*CommandCallback) (String str_command);
+typedef void (*DispatcherCallbackback) (String str_command);
 
 #define CommandDispatcherInstance CommandDispatcher::instance()
 
@@ -18,29 +19,34 @@ public:
     return self;
   }
 
-  static void process_command(String str_command) {
+  static void process_command(String str_command, ReplyCallback callback) {
     LOG("Received Command: " + str_command);
-    if (CommandDispatcherInstance.is_known_command(str_command)) {
-      CommandCallback callback = CommandDispatcherInstance.get_callback(str_command);
-      assert(callback);
-      callback(str_command);
+    const String & target = AbstractCommand::extract_target_command(str_command);
+    LOG("target: " + target);
+
+    if (CommandDispatcherInstance.is_known_command(target)) {
+      AbstractCommand * command = CommandDispatcherInstance.make_command(target, str_command, callback);
+      assert(command);
+      command->run();
     }
     else
-      LOG("ATKO:\"" + str_command + "\"");
+      LOG("AT+KO:" + str_command);
   }
 
-  void register_command(const String & command, CommandCallback callback) {
-    registered_commands.insert(command, callback);
+  void register_command(const String & str_command, AbstractCommand * command) {
+    registered_commands.insert(str_command, command);
   }
 
   bool is_known_command(const String & str_command) {
     return registered_commands.contains(str_command);
   }
 
-  CommandCallback get_callback(const String & str_command) {
-    return registered_commands.value(str_command, nullptr);
+  AbstractCommand * make_command(const String & target, const String & str_command, ReplyCallback callback) {
+    AbstractCommand * maker = registered_commands.value(target, nullptr);
+    assert(maker);
+    return maker->make(str_command, callback);
   }
 
 private:
-  Hash<String, CommandCallback> registered_commands;
+  Hash<String, AbstractCommand*> registered_commands;
 };

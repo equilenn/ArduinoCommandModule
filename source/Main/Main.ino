@@ -6,8 +6,8 @@
 #include "CommandDispatcher.h"
 #include "Communication.h"
 
-#include "commands/HealthCheck.h"
-#include "commands/LedControl.h"
+#include "HealthCheck.h"
+#include "LedControl.h"
 
 void health_check(String c) { LOG("Heart is beating"); }
 void on(String c) { digitalWrite(LED_BUILTIN, HIGH); }
@@ -19,7 +19,7 @@ void __assert(const char *__func, const char *__file, int __lineno, const char *
   LOG("Function: " + String(__func));
   LOG("[Line " + String(__lineno, DEC) + "]: " + String(__sexp));
   LOG("Program terminated");
-  Serial.flush();
+  FLUSH_LOG();
   abort();
 }
 
@@ -28,8 +28,8 @@ void setup() {
   Communication::instance();
   CommunicationInstance.set_callback(&CommandDispatcher::process_command);
 
-  CommandDispatcherInstance.register_command("HC", new HealthCheck);
-  CommandDispatcherInstance.register_command("LED", new LedControl);
+  CommandDispatcherInstance.register_command("HC", HealthCheck::run);
+  CommandDispatcherInstance.register_command("LED", LedControl::run);
   // CommandDispatcherInstance.register_command("AT+ON", on);
   // CommandDispatcherInstance.register_command("AT+OFF", off);
   // LOG(CommandDispatcherInstance.is_known_command("AT+HC") ? "OUI" : "NON");

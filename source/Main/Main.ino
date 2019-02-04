@@ -8,6 +8,7 @@
 
 #include "HealthCheck.h"
 #include "LedControl.h"
+#include "LiquidScreen.h"
 
 void health_check(String c) { LOG("Heart is beating"); }
 void on(String c) { digitalWrite(LED_BUILTIN, HIGH); }
@@ -28,11 +29,12 @@ void setup() {
   Communication::instance();
   CommunicationInstance.set_callback(&CommandDispatcher::process_command);
 
+  Hardware::setup();
+  LiquidScreen::setup();
+
   CommandDispatcherInstance.register_command("HC", HealthCheck::run);
   CommandDispatcherInstance.register_command("LED", LedControl::run);
-  // CommandDispatcherInstance.register_command("AT+ON", on);
-  // CommandDispatcherInstance.register_command("AT+OFF", off);
-  // LOG(CommandDispatcherInstance.is_known_command("AT+HC") ? "OUI" : "NON");
+  CommandDispatcherInstance.register_command("LS", LiquidScreen::run);
 
   LOG("AT+READY");
 }

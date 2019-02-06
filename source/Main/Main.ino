@@ -9,6 +9,7 @@
 #include "HealthCheck.h"
 #include "LedControl.h"
 #include "LiquidScreen.h"
+#include "DigitalTempAndHumidity.h"
 
 void health_check(String c) { LOG("Heart is beating"); }
 void on(String c) { digitalWrite(LED_BUILTIN, HIGH); }
@@ -29,6 +30,7 @@ void setup() {
   Communication::instance();
   CommunicationInstance.set_callback(&CommandDispatcher::process_command);
 
+  DigitalTempAndHumidity::setup();
   Hardware::setup();
   LiquidScreen::setup();
 
@@ -40,4 +42,6 @@ void setup() {
 }
 
 void loop() {
+  LiquidScreen::loop();
+  DigitalTempAndHumidity::loop();
 }

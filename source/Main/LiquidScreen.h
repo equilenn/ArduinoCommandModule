@@ -51,7 +51,6 @@ public:
   }
 
   void display_digital_temperature() {
-    LOG("display_digital_temperature");
     DigitalTempAndHumidity & controller = DigitalTempAndHumidity::instance();
 
     assert(lcd);

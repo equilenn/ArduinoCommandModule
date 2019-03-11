@@ -4,7 +4,6 @@
 
 static const int DHT_SENSOR_PIN = 2;
 
-
 class DigitalTempAndHumidity
 {
 public:
@@ -27,7 +26,6 @@ public:
   }
 
   void read() {
-    LOG("READ");
     byte _temp = 0, _hum = 0;
 
     if ( dht11.read(&_temp, &_hum, NULL) == SimpleDHTErrSuccess ) {

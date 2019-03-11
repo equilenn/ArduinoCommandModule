@@ -10,6 +10,7 @@
 #include "LedControl.h"
 #include "LiquidScreen.h"
 #include "DigitalTempAndHumidity.h"
+#include "Relay.h"
 
 void health_check(String c) { LOG("Heart is beating"); }
 void on(String c) { digitalWrite(LED_BUILTIN, HIGH); }
@@ -33,10 +34,12 @@ void setup() {
   DigitalTempAndHumidity::setup();
   Hardware::setup();
   LiquidScreen::setup();
+  Relay::setup();
 
   CommandDispatcherInstance.register_command("HC", HealthCheck::run);
   CommandDispatcherInstance.register_command("LED", LedControl::run);
   CommandDispatcherInstance.register_command("LS", LiquidScreen::run);
+  CommandDispatcherInstance.register_command("RE", Relay::run);
 
   LOG("AT+READY");
 }

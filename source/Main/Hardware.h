@@ -1,21 +1,23 @@
 #pragma once
 
+#include "PinManager.h"
+
 class Hardware
 {
 public:
   static void setup() {
-    pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(PIN(UNOCARD_LED), OUTPUT);
   }
 
   static void turn_led_off() {
-    digitalWrite(LED_BUILTIN, LOW);
+    digitalWrite(PIN(UNOCARD_LED), LOW);
   }
 
   static void turn_led_on() {
-    digitalWrite(LED_BUILTIN, HIGH);
+    digitalWrite(PIN(UNOCARD_LED), HIGH);
   }
 
   static int status() {
-    return digitalRead(LED_BUILTIN);
+    return digitalRead(PIN(UNOCARD_LED));
   }
 };

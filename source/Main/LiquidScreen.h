@@ -5,6 +5,8 @@
 #include "AnalogTemperature.h"
 #include "DigitalTempAndHumidity.h"
 
+#include "PinManager.h"
+
 class LiquidScreen
 {
 public:

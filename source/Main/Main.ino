@@ -5,16 +5,13 @@
 
 #include "CommandDispatcher.h"
 #include "Communication.h"
+#include "Bluetooth.h"
 
 #include "HealthCheck.h"
 #include "LedControl.h"
 #include "LiquidScreen.h"
 #include "DigitalTempAndHumidity.h"
 #include "Relay.h"
-
-void health_check(String c) { LOG("Heart is beating"); }
-void on(String c) { digitalWrite(LED_BUILTIN, HIGH); }
-void off(String c) { digitalWrite(LED_BUILTIN, LOW); }
 
 // handle diagnostic informations given by assertion and abort program execution:
 void __assert(const char *__func, const char *__file, int __lineno, const char *__sexp) {
@@ -31,6 +28,9 @@ void setup() {
   Communication::instance();
   CommunicationInstance.set_callback(&CommandDispatcher::process_command);
 
+  Bluetooth::instance();
+  BluetoothInstance.set_callback(&CommandDispatcher::process_command);
+
   DigitalTempAndHumidity::setup();
   Hardware::setup();
   LiquidScreen::setup();
@@ -45,6 +45,7 @@ void setup() {
 }
 
 void loop() {
+  Bluetooth::loop();
   LiquidScreen::loop();
   DigitalTempAndHumidity::loop();
 }

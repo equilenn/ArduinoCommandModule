@@ -2,7 +2,7 @@
 
 #include <SimpleDHT.h>
 
-static const int DHT_SENSOR_PIN = 2;
+#include "PinManager.h"
 
 class DigitalTempAndHumidity
 {
@@ -52,7 +52,7 @@ private:
   int temperature;
   int humidity;
 
-  DigitalTempAndHumidity() : dht11(DHT_SENSOR_PIN), temperature(0), humidity(0) {
+  DigitalTempAndHumidity() : dht11(PIN(DHT_SENSOR_PIN)), temperature(0), humidity(0) {
   }
 
   SimpleDHT11 dht11;

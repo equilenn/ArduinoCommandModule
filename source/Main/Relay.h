@@ -3,14 +3,13 @@
 #include "CommandHelper.h"
 #include "Hardware.h"
 
-static const int RELAY_PIN = 3;
+#include "PinManager.h"
 
 class Relay
 {
 public:
   static void setup() {
-    LOG("SETUP");
-    pinMode(RELAY_PIN, OUTPUT);
+    pinMode(PIN(RELAY_PIN), OUTPUT);
   }
 
   static void run(const String & str_command, ReplyCallback reply) {
@@ -47,19 +46,19 @@ public:
   {
     LOG("OFF");
     Hardware::turn_led_off();
-    digitalWrite(RELAY_PIN, LOW);
+    digitalWrite(PIN(RELAY_PIN), LOW);
   }
 
   static void turn_on()
   {
     LOG("ON");
     Hardware::turn_led_on();
-    digitalWrite(RELAY_PIN, HIGH);
+    digitalWrite(PIN(RELAY_PIN), HIGH);
   }
 
   static int status()
   {
     LOG("STATUS");
-    return digitalRead(RELAY_PIN);
+    return digitalRead(PIN(RELAY_PIN));
   }
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CommandHelper.h"
-#include "Hardware.h"
+#include "PinManager.h"
 
 class LedControl
 {
@@ -10,17 +10,22 @@ public:
     const String & arg = CommandHelper::extract_arg(0, str_command);
 
     if (arg == "ON") {
-      Hardware::turn_led_on();
+      turn_on();
       reply("AT+OK");
     }
 
     else if (arg == "OFF") {
-      Hardware::turn_led_off();
+      turn_off();
+      reply("AT+OK");
+    }
+
+    else if (arg == "TGL") {
+      toggle();
       reply("AT+OK");
     }
 
     else if (arg == "ST") {
-      int value = Hardware::status();
+      int value = status();
       if (value == HIGH)
         reply("LED+ON");
       else if (value == LOW)
@@ -32,4 +37,25 @@ public:
     else
       reply("AT+UC");
   }
+
+  static void setup() {
+    pinMode(PIN(UNOCARD_LED), OUTPUT);
+  }
+
+  static void turn_off() {
+    digitalWrite(PIN(UNOCARD_LED), LOW);
+  }
+
+  static void turn_on() {
+    digitalWrite(PIN(UNOCARD_LED), HIGH);
+  }
+
+  static void toggle() {
+    digitalWrite(PIN(UNOCARD_LED), status() == HIGH ? LOW : HIGH);
+  }
+
+  static int status() {
+    return digitalRead(PIN(UNOCARD_LED));
+  }
+
 };

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CommandHelper.h"
-#include "Hardware.h"
 
 #include "PinManager.h"
 
@@ -27,12 +26,17 @@ public:
       reply("AT+OK");
     }
 
+    else if (arg == "TGL") {
+      toggle();
+      reply("AT+OK");
+    }
+
     else if (arg == "ST")
     {
       int value = status();
-      if (value == HIGH)
+      if (value == LOW)
         reply("LED+ON");
-      else if (value == LOW)
+      else if (value == HIGH)
         reply("LED+OFF");
       else
         reply("LED+UNKNOWN");
@@ -44,21 +48,21 @@ public:
 
   static void turn_off()
   {
-    LOG("OFF");
-    Hardware::turn_led_off();
-    digitalWrite(PIN(RELAY_PIN), LOW);
+    digitalWrite(PIN(RELAY_PIN), HIGH);
   }
 
   static void turn_on()
   {
-    LOG("ON");
-    Hardware::turn_led_on();
-    digitalWrite(PIN(RELAY_PIN), HIGH);
+    digitalWrite(PIN(RELAY_PIN), LOW);
+  }
+
+  static void toggle()
+  {
+    digitalWrite(PIN(RELAY_PIN), status() == HIGH ? LOW : HIGH);
   }
 
   static int status()
   {
-    LOG("STATUS");
     return digitalRead(PIN(RELAY_PIN));
   }
 };

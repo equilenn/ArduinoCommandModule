@@ -31,15 +31,15 @@ void setup() {
   Bluetooth::instance();
   BluetoothInstance.set_callback(&CommandDispatcher::process_command);
 
+  LedControl::setup();
   DigitalTempAndHumidity::setup();
-  Hardware::setup();
   LiquidScreen::setup();
   Relay::setup();
 
-  CommandDispatcherInstance.register_command("HC", HealthCheck::run);
+  CommandDispatcherInstance.register_command("HC",  HealthCheck::run);
   CommandDispatcherInstance.register_command("LED", LedControl::run);
-  CommandDispatcherInstance.register_command("LS", LiquidScreen::run);
-  CommandDispatcherInstance.register_command("RE", Relay::run);
+  CommandDispatcherInstance.register_command("LS",  LiquidScreen::run);
+  CommandDispatcherInstance.register_command("RE",  Relay::run);
 
   LOG("AT+READY");
 }

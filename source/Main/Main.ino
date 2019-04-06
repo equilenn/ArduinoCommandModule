@@ -11,10 +11,12 @@
 #include "LedControl.h"
 #include "LiquidScreen.h"
 #include "DigitalTempAndHumidity.h"
+#include "ButtonManager.h"
 #include "Relay.h"
 
 // handle diagnostic informations given by assertion and abort program execution:
-void __assert(const char *__func, const char *__file, int __lineno, const char *__sexp) {
+void __assert(const char *__func, const char *__file, int __lineno, const char *__sexp)
+{
   LOG("Assertion failed in: " + String(__file));
   LOG("Function: " + String(__func));
   LOG("[Line " + String(__lineno, DEC) + "]: " + String(__sexp));
@@ -23,7 +25,8 @@ void __assert(const char *__func, const char *__file, int __lineno, const char *
   abort();
 }
 
-void setup() {
+void setup()
+{
   CommandDispatcher::instance();
   Communication::instance();
   CommunicationInstance.set_callback(&CommandDispatcher::process_command);
@@ -32,20 +35,23 @@ void setup() {
   BluetoothInstance.set_callback(&CommandDispatcher::process_command);
 
   LedControl::setup();
-  DigitalTempAndHumidity::setup();
+  // DigitalTempAndHumidity::setup();
   LiquidScreen::setup();
+  ButtonManager::setup();
   Relay::setup();
 
-  CommandDispatcherInstance.register_command("HC",  HealthCheck::run);
+  CommandDispatcherInstance.register_command("HC", HealthCheck::run);
   CommandDispatcherInstance.register_command("LED", LedControl::run);
-  CommandDispatcherInstance.register_command("LS",  LiquidScreen::run);
-  CommandDispatcherInstance.register_command("RE",  Relay::run);
+  CommandDispatcherInstance.register_command("LS", LiquidScreen::run);
+  CommandDispatcherInstance.register_command("RE", Relay::run);
 
   LOG("AT+READY");
 }
 
-void loop() {
+void loop()
+{
   Bluetooth::loop();
   LiquidScreen::loop();
-  DigitalTempAndHumidity::loop();
+  ButtonManager::loop();
+  // DigitalTempAndHumidity::loop();
 }

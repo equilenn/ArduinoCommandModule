@@ -1,68 +1,90 @@
 #pragma once
 
 #include "CommandHelper.h"
-
+#include "Communication.h"
 #include "PinManager.h"
 
 class Relay
 {
 public:
-  static void setup() {
-    pinMode(PIN(RELAY_PIN), OUTPUT);
+  static void setup()
+  {
+    pinMode(PIN(RELAY_01_PIN), OUTPUT);
+    pinMode(PIN(RELAY_02_PIN), OUTPUT);
+    turn_off(PIN(RELAY_01_PIN));
+    turn_off(PIN(RELAY_02_PIN));
   }
 
-  static void run(const String & str_command, ReplyCallback reply) {
-    const String & arg = CommandHelper::extract_arg(0, str_command);
+  static void run(const String &str_command, ReplyCallback reply)
+  {
+    const String &noRelay = CommandHelper::extract_arg(0, str_command);
+    const String &action = CommandHelper::extract_arg(1, str_command);
 
-    if (arg == "ON")
+    int pin = noRelay == "01" ? PIN(RELAY_01_PIN) : PIN(RELAY_02_PIN);
+
+    if (action == "ON")
     {
-      turn_on();
-      reply("AT+OK");
+      turn_on(pin);
+      if (reply)
+        reply("AT+OK");
     }
 
-    else if (arg == "OFF")
+    else if (action == "OFF")
     {
-      turn_off();
-      reply("AT+OK");
+      turn_off(pin);
+      if (reply)
+        reply("AT+OK");
     }
 
-    else if (arg == "TGL") {
-      toggle();
-      reply("AT+OK");
+    else if (action == "TGL")
+    {
+      toggle(pin);
+      if (reply)
+        reply("AT+OK");
     }
 
-    else if (arg == "ST")
+    else if (action == "ST")
     {
-      int value = status();
+      int value = status(pin);
+      String result;
       if (value == LOW)
-        reply("LED+ON");
+        result = "RE+ON";
       else if (value == HIGH)
-        reply("LED+OFF");
+        result = "RE+OFF";
       else
-        reply("LED+UNKNOWN");
+        result = "RE+UNKNOWN";
+
+      if (reply)
+        reply(result);
     }
 
     else
-      reply("AT+UC");
+      reply("AT+RE+UC");
   }
 
-  static void turn_off()
+  static void turn_off(int pin)
   {
-    digitalWrite(PIN(RELAY_PIN), HIGH);
+    LOG(pin);
+    LOG("turn_off");
+    digitalWrite(pin, HIGH);
   }
 
-  static void turn_on()
+  static void turn_on(int pin)
   {
-    digitalWrite(PIN(RELAY_PIN), LOW);
+    LOG(pin);
+    LOG("turn_on");
+    digitalWrite(pin, LOW);
   }
 
-  static void toggle()
+  static void toggle(int pin)
   {
-    digitalWrite(PIN(RELAY_PIN), status() == HIGH ? LOW : HIGH);
+    LOG(pin);
+    LOG("toggle");
+    digitalWrite(pin, status(pin) == HIGH ? LOW : HIGH);
   }
 
-  static int status()
+  static int status(int pin)
   {
-    return digitalRead(PIN(RELAY_PIN));
+    return digitalRead(pin);
   }
 };

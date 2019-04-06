@@ -1,7 +1,7 @@
 #pragma once
 
-typedef void (*ReplyCallback) (const String & result);
-typedef void (*DispatcherCallback) (const String & str_command, ReplyCallback reply_callback);
+typedef void (*ReplyCallback)(const String &result);
+typedef void (*DispatcherCallback)(const String &str_command, ReplyCallback reply_callback);
 
 #define CommunicationInstance Communication::instance()
 #define LOG(data) Communication::write_data(data)
@@ -10,7 +10,8 @@ typedef void (*DispatcherCallback) (const String & str_command, ReplyCallback re
 class Communication
 {
 private:
-  Communication() {
+  Communication()
+  {
     cache_command.reserve(200);
     cache_command = "";
 
@@ -18,17 +19,21 @@ private:
   }
 
 public:
-  static Communication & instance() {
+  static Communication &instance()
+  {
     static Communication self;
     return self;
   }
 
-  void set_callback(DispatcherCallback callback) {
-      this->callback = callback;
+  void set_callback(DispatcherCallback callback)
+  {
+    this->callback = callback;
   }
 
-  void read_data() {
-    while (Serial.available()) {
+  void read_data()
+  {
+    while (Serial.available())
+    {
       char inChar = (char)Serial.read();
 
       if (inChar == '\n')
@@ -38,16 +43,26 @@ public:
     }
   }
 
-  static void write_data(const String & data) {
+  static void write_data(int value)
+  {
+    char buffer[25];
+    sprintf(buffer, "%d", value);
+    write_data(buffer);
+  }
+
+  static void write_data(const String &data)
+  {
     Serial.println(data);
   }
 
-  static void flush_data() {
+  static void flush_data()
+  {
     Serial.flush();
   }
 
 private:
-  void process_command() {
+  void process_command()
+  {
     assert(callback);
     callback(cache_command, Communication::write_data);
     cache_command = "";
@@ -58,6 +73,7 @@ private:
   DispatcherCallback callback;
 };
 
-void serialEvent() {
+void serialEvent()
+{
   CommunicationInstance.read_data();
 }

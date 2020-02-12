@@ -20,7 +20,7 @@ private:
   }
 
 public:
-  static Bluetooth & instance()
+  static Bluetooth &instance()
   {
     static Bluetooth self;
     return self;
@@ -28,12 +28,13 @@ public:
 
   void set_callback(DispatcherCallback callback)
   {
-      this->callback = callback;
+    this->callback = callback;
   }
 
   void read_data()
   {
-    while (device.available()) {
+    while (device.available())
+    {
       char inChar = (char)device.read();
 
       if (inChar == '\n')
@@ -43,7 +44,14 @@ public:
     }
   }
 
-  static void write_data(const String & data)
+  static void run(const String &str_command, ReplyCallback reply)
+  {
+    const String &result = CommandHelper::extract_whole_command(str_command);
+    instance().write_data(result);
+    reply("BT: " + result);
+  }
+
+  static void write_data(const String &data)
   {
     instance().device.print(data);
   }
@@ -61,6 +69,7 @@ public:
 private:
   void process_command()
   {
+    LOG(cache_command);
     assert(callback);
     callback(cache_command, Bluetooth::write_data);
     cache_command = "";

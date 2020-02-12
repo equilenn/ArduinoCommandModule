@@ -36,14 +36,15 @@ void setup()
 
   LedControl::setup();
   // DigitalTempAndHumidity::setup();
-  LiquidScreen::setup();
-  ButtonManager::setup();
+  // LiquidScreen::setup();
+  // ButtonManager::setup();
   Relay::setup();
 
-  CommandDispatcherInstance.register_command("HC", HealthCheck::run);
+  CommandDispatcherInstance.register_command("BT", Bluetooth::run);
+  // CommandDispatcherInstance.register_command("HC", HealthCheck::run);
   CommandDispatcherInstance.register_command("LED", LedControl::run);
-  CommandDispatcherInstance.register_command("LS", LiquidScreen::run);
-  CommandDispatcherInstance.register_command("RE", Relay::run);
+  // CommandDispatcherInstance.register_command("LS", LiquidScreen::run);
+  // CommandDispatcherInstance.register_command("RE", Relay::run);
 
   LOG("AT+READY");
 }

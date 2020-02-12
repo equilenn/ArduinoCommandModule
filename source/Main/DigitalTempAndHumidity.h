@@ -7,28 +7,34 @@
 class DigitalTempAndHumidity
 {
 public:
-  static DigitalTempAndHumidity & instance() {
+  static DigitalTempAndHumidity &instance()
+  {
     static DigitalTempAndHumidity self;
     return self;
   }
 
-  static void setup() {
-    DigitalTempAndHumidity & self = instance();
+  static void setup()
+  {
+    DigitalTempAndHumidity &self = instance();
   }
 
-  static void loop() {
-    DigitalTempAndHumidity & self = instance();
+  static void loop()
+  {
+    DigitalTempAndHumidity &self = instance();
     static int previous_time = 0;
-    if (millis() / 1000 - previous_time >= 3) {
+    if (millis() / 1000 - previous_time >= 3)
+    {
       self.read();
       previous_time = millis() / 1000;
     }
   }
 
-  void read() {
+  void read()
+  {
     byte _temp = 0, _hum = 0;
 
-    if ( dht11.read(&_temp, &_hum, NULL) == SimpleDHTErrSuccess ) {
+    if (dht11.read(&_temp, &_hum, NULL) == SimpleDHTErrSuccess)
+    {
       // Serial.print( "read: " );
       // Serial.print( "T = " );
       // Serial.print( _temp, 1 );
@@ -40,11 +46,13 @@ public:
     }
   }
 
-  int get_temp() {
+  int get_temp()
+  {
     return temperature;
   }
 
-  int get_humidity() {
+  int get_humidity()
+  {
     return humidity;
   }
 
@@ -52,7 +60,8 @@ private:
   int temperature;
   int humidity;
 
-  DigitalTempAndHumidity() : dht11(PIN(DHT_SENSOR_PIN)), temperature(0), humidity(0) {
+  DigitalTempAndHumidity() : dht11(PIN(DHT_SENSOR_PIN)), temperature(0), humidity(0)
+  {
   }
 
   SimpleDHT11 dht11;

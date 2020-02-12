@@ -8,7 +8,7 @@
 
 class Button
 {
-  public:
+public:
     Button(int index, int minAnalogValue, int maxAnalogValue, String command_str)
         : m_index(index),
           m_minAnalogValue(minAnalogValue),
@@ -27,7 +27,7 @@ class Button
         Relay::run(m_command_str, nullptr);
     }
 
-  private:
+private:
     int m_index;
     int m_minAnalogValue;
     int m_maxAnalogValue;
@@ -36,7 +36,7 @@ class Button
 
 class ButtonManager
 {
-  private:
+private:
     ButtonManager() : m_currentValue(1023),
                       shutter_up(0, 0, 50, ""),
                       shutter_down(0, 480, 550, ""),
@@ -71,7 +71,7 @@ class ButtonManager
             ready = true;
     }
 
-  public:
+public:
     static ButtonManager &instance()
     {
         static ButtonManager self;
@@ -94,7 +94,7 @@ class ButtonManager
         }
     }
 
-  private:
+private:
     int m_currentValue;
     Button shutter_up;
     Button shutter_down;
